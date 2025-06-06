@@ -34,11 +34,9 @@ export default function Home() {
     setIsLoading(true);
 
     try {
-      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
-      if (!backendUrl) {
-        throw new Error('Backend URL not configured');
-      }
-      const response = await fetch(`${backendUrl}/api/chat`, {
+      const backendUrl = '/api';  // Use relative path since both frontend and backend are on the same domain
+      console.log('Backend URL:', backendUrl);
+      const response = await fetch(`${backendUrl}/chat`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
