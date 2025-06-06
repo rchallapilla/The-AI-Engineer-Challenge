@@ -34,9 +34,9 @@ export default function Home() {
     setIsLoading(true);
 
     try {
-      const backendUrl = '/api';  // Use relative path since both frontend and backend are on the same domain
+      const backendUrl = 'http://localhost:8000';  // Use localhost for local development
       console.log('Backend URL:', backendUrl);
-      const response = await fetch(`${backendUrl}/chat`, {
+      const response = await fetch(`${backendUrl}/api/chat`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
