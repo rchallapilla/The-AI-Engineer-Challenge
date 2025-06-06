@@ -34,7 +34,10 @@ export default function Home() {
     setIsLoading(true);
 
     try {
-      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8000';
+      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+      if (!backendUrl) {
+        throw new Error('Backend URL not configured');
+      }
       const response = await fetch(`${backendUrl}/api/chat`, {
         method: 'POST',
         headers: {
