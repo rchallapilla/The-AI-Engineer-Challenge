@@ -1,6 +1,6 @@
 # Import required FastAPI components for building the API
 from fastapi import FastAPI, HTTPException, Request
-from fastapi.responses import StreamingResponse
+from fastapi.responses import StreamingResponse, Response
 from fastapi.middleware.cors import CORSMiddleware
 # Import Pydantic for data validation and settings management
 from pydantic import BaseModel
@@ -16,9 +16,9 @@ app = FastAPI(title="OpenAI Chat API")
 # This allows the API to be accessed from different domains/origins
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["https://ai-engineering-challeng-isaacasimov.vercel.app"],
     allow_credentials=True,
-    allow_methods=["GET", "POST", "OPTIONS"],
+    allow_methods=["*"],
     allow_headers=["*"],
     expose_headers=["*"]
 )
@@ -30,12 +30,6 @@ class ChatRequest(BaseModel):
     user_message: str      # Message from the user
     model: Optional[str] = "gpt-4.1-mini"  # Optional model selection with default
     api_key: str          # OpenAI API key for authentication
-
-
-#trying to fix cors issue
-@app.options("/api/chat")
-async def options_chat(request: Request):
-    return {}
 
 # Define the main chat endpoint that handles POST requests
 @app.post("/api/chat")
@@ -62,7 +56,12 @@ async def chat(request: ChatRequest):
                     yield chunk.choices[0].delta.content
 
         # Return a streaming response to the client
-        return StreamingResponse(generate(), media_type="text/plain")
+        return StreamingResponse(generate(), media_type="text/plain",     headers={
+        "Access-Control-Allow-Origin": "https://ai-engineering-challeng-isaacasimov.vercel.app",
+        "Access-Control-Allow-Credentials": "true",
+        "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type, Authorization",
+    })
     
     except Exception as e:
         # Handle any errors that occur during processing
