@@ -11,22 +11,10 @@ export default function Home() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [apiKey, setApiKey] = useState(process.env.NEXT_PUBLIC_OPENAI_API_KEY || '');
-  const [showApiKeyInput, setShowApiKeyInput] = useState(!process.env.NEXT_PUBLIC_OPENAI_API_KEY);
-
-  console.log('Backend URL:', process.env.NEXT_PUBLIC_BACKEND_URL);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim()) return;
-    if (!apiKey) {
-      setMessages(prev => [...prev, { 
-        role: 'assistant', 
-        content: 'Please enter your OpenAI API key first.' 
-      }]);
-      setShowApiKeyInput(true);
-      return;
-    }
 
     const userMessage: Message = { role: 'user', content: input };
     setMessages(prev => [...prev, userMessage]);
@@ -34,9 +22,7 @@ export default function Home() {
     setIsLoading(true);
 
     try {
-      const backendUrl = 'http://localhost:8000';  // Use localhost for local development
-      console.log('Backend URL:', backendUrl);
-      const response = await fetch(`${backendUrl}/api/chat`, {
+      const response = await fetch('/api/chat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -44,8 +30,7 @@ export default function Home() {
         body: JSON.stringify({
           user_message: input,
           developer_message: "You are a spiritual guide that combines Isaac Asimov's scientific vision with ancient Indian wisdom. Respond with insights that merge Asimov's Three Laws of Robotics with concepts from Vedanta, while maintaining a futuristic yet spiritual perspective.",
-          model: "gpt-4.1-mini",
-          api_key: apiKey
+          model: "gpt-4.1-mini"
         }),
       });
 
@@ -86,17 +71,6 @@ export default function Home() {
     }
   };
 
-  const handleApiKeySubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (apiKey.trim()) {
-      setShowApiKeyInput(false);
-      setMessages(prev => [...prev, { 
-        role: 'assistant', 
-        content: 'API key set successfully. You can now start chatting!' 
-      }]);
-    }
-  };
-
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-900 via-purple-900 to-slate-900 text-white">
       <div className="container mx-auto px-4 py-8 max-w-4xl">
@@ -114,26 +88,6 @@ export default function Home() {
             <p>Third Law: A robot must protect its own existence as long as such protection does not conflict with the First or Second Law.</p>
           </div>
         </header>
-
-        {showApiKeyInput && (
-          <div className="mb-6 p-4 bg-black/40 backdrop-blur-lg rounded-lg border border-purple-500/30">
-            <form onSubmit={handleApiKeySubmit} className="flex gap-4">
-              <input
-                type="password"
-                value={apiKey}
-                onChange={(e) => setApiKey(e.target.value)}
-                placeholder="Enter your OpenAI API key (optional)"
-                className="flex-1 p-4 rounded-lg bg-black/40 backdrop-blur-lg text-white placeholder-purple-300 focus:outline-none focus:ring-2 focus:ring-purple-500 border border-purple-500/30"
-              />
-              <button
-                type="submit"
-                className="px-6 py-4 bg-gradient-to-r from-amber-600 to-purple-600 rounded-lg font-semibold hover:from-amber-700 hover:to-purple-700 transition-all border border-purple-500/30"
-              >
-                Set API Key
-              </button>
-            </form>
-          </div>
-        )}
 
         <div className="bg-black/40 backdrop-blur-lg rounded-lg p-6 mb-6 h-[60vh] overflow-y-auto border border-purple-500/30">
           {messages.map((message, index) => (

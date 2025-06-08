@@ -12,13 +12,18 @@ from typing import Optional
 # Initialize FastAPI application with a title
 app = FastAPI(title="OpenAI Chat API")
 
+# Get OpenAI API key from environment variable
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+if not OPENAI_API_KEY:
+    raise ValueError("OPENAI_API_KEY environment variable is not set")
+
 # Configure CORS (Cross-Origin Resource Sharing) middleware
 # This allows the API to be accessed from different domains/origins
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:3000",
-        "https://ai-engineering-challeng-isaacasimov.vercel.app"
+        "https://asimov-vedanta-12lxb8yaj-raghus-projects-920446ba.vercel.app"
     ],
     allow_credentials=True,
     allow_methods=["*"],
@@ -32,14 +37,13 @@ class ChatRequest(BaseModel):
     developer_message: str  # Message from the developer/system
     user_message: str      # Message from the user
     model: Optional[str] = "gpt-4.1-mini"  # Optional model selection with default
-    api_key: str          # OpenAI API key for authentication
 
 # Define the main chat endpoint that handles POST requests
 @app.post("/api/chat")
 async def chat(request: ChatRequest):
     try:
-        # Initialize OpenAI client with the provided API key
-        client = OpenAI(api_key=request.api_key)
+        # Initialize OpenAI client with the environment variable API key
+        client = OpenAI(api_key=OPENAI_API_KEY)
         
         # Create an async generator function for streaming responses
         async def generate():
@@ -59,12 +63,12 @@ async def chat(request: ChatRequest):
                     yield chunk.choices[0].delta.content
 
         # Return a streaming response to the client
-        return StreamingResponse(generate(), media_type="text/plain",     headers={
-        "Access-Control-Allow-Origin": "https://ai-engineering-challeng-isaacasimov.vercel.app",
-        "Access-Control-Allow-Credentials": "true",
-        "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-        "Access-Control-Allow-Headers": "Content-Type, Authorization",
-    })
+        return StreamingResponse(generate(), media_type="text/plain", headers={
+            "Access-Control-Allow-Origin": "https://asimov-vedanta-12lxb8yaj-raghus-projects-920446ba.vercel.app",
+            "Access-Control-Allow-Credentials": "true",
+            "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+            "Access-Control-Allow-Headers": "Content-Type, Authorization",
+        })
     
     except Exception as e:
         # Handle any errors that occur during processing
