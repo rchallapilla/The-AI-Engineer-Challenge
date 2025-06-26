@@ -29,7 +29,7 @@ export default function Home() {
         },
         body: JSON.stringify({
           user_message: input,
-          developer_message: "You are a spiritual guide that combines Isaac Asimov's scientific vision with ancient Indian wisdom. Respond with insights that merge Asimov's Three Laws of Robotics with concepts from Vedanta, while maintaining a futuristic yet spiritual perspective.",
+          developer_message: "Respond in Markdown with bullet points where helpful. Include code examples in code blocks. Label your answer sections with headers. You are a spiritual guide that combines Isaac Asimov's scientific vision with ancient Indian wisdom. Respond with insights that merge Asimov's Three Laws of Robotics with concepts from Vedanta, while maintaining a futuristic yet spiritual perspective.",
           model: "gpt-4.1-mini"
         }),
       });
