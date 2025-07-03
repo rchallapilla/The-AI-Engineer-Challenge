@@ -35,10 +35,7 @@ rag_service = None
 # This allows the API to be accessed from different domains/origins
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:3000",
-        "https://asimov-vedanta-12lxb8yaj-raghus-projects-920446ba.vercel.app"
-    ],
+    allow_origins=["*"],  # Allow all origins for now
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -82,12 +79,7 @@ async def chat(request: ChatRequest):
                     yield chunk.choices[0].delta.content
 
         # Return a streaming response to the client
-        return StreamingResponse(generate(), media_type="text/plain", headers={
-            "Access-Control-Allow-Origin": "https://asimov-vedanta-12lxb8yaj-raghus-projects-920446ba.vercel.app",
-            "Access-Control-Allow-Credentials": "true",
-            "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-            "Access-Control-Allow-Headers": "Content-Type, Authorization",
-        })
+        return StreamingResponse(generate(), media_type="text/plain")
     
     except Exception as e:
         # Handle any errors that occur during processing
@@ -188,12 +180,7 @@ Keep your answers concise and relevant to the document content."""
                     yield chunk.choices[0].delta.content
 
         # Return a streaming response to the client
-        return StreamingResponse(generate(), media_type="text/plain", headers={
-            "Access-Control-Allow-Origin": "https://asimov-vedanta-12lxb8yaj-raghus-projects-920446ba.vercel.app",
-            "Access-Control-Allow-Credentials": "true",
-            "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-            "Access-Control-Allow-Headers": "Content-Type, Authorization",
-        })
+        return StreamingResponse(generate(), media_type="text/plain")
         
     except HTTPException:
         raise
