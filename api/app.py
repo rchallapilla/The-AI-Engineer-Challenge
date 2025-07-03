@@ -28,8 +28,11 @@ def get_openai_api_key():
         raise ValueError("OPENAI_API_KEY environment variable is not set")
     return api_key
 
-# Initialize simplified RAG service
-rag_service = SimpleRAGService()
+# Initialize simplified RAG service (without requiring API key at startup)
+rag_service = None
+
+# Initialize simplified RAG service (without requiring API key at startup)
+rag_service = None
 
 # Configure CORS (Cross-Origin Resource Sharing) middleware
 # This allows the API to be accessed from different domains/origins
@@ -110,6 +113,21 @@ async def upload_pdf(file: UploadFile = File(...)):
             temp_file.write(content)
             temp_file_path = temp_file.name
         
+        # Initialize RAG service if not already done
+        if rag_service is None:
+            global rag_service
+            rag_service = SimpleRAGService()
+        
+        # Initialize RAG service if not already done
+        if rag_service is None:
+            global rag_service
+            rag_service = SimpleRAGService()
+        
+        # Initialize RAG service if not already done
+        if rag_service is None:
+            global rag_service
+            rag_service = SimpleRAGService()
+        
         # Create a new session
         session_id = rag_service.create_session()
         
@@ -141,6 +159,26 @@ async def rag_chat(request: RAGChatRequest):
     Chat with a PDF using RAG.
     """
     try:
+        # Initialize RAG service if not already done
+        if rag_service is None:
+            global rag_service
+            rag_service = SimpleRAGService()
+        
+        # Initialize RAG service if not already done
+        if rag_service is None:
+            global rag_service
+            rag_service = SimpleRAGService()
+        
+        # Initialize RAG service if not already done
+        if rag_service is None:
+            global rag_service
+            rag_service = SimpleRAGService()
+        
+        # Initialize RAG service if not already done
+        if rag_service is None:
+            global rag_service
+            rag_service = SimpleRAGService()
+        
         # Get relevant context from the PDF
         rag_result = rag_service.query_pdf(request.session_id, request.user_message)
         
@@ -196,6 +234,11 @@ async def list_sessions():
     List all available RAG sessions.
     """
     try:
+        # Initialize RAG service if not already done
+        if rag_service is None:
+            global rag_service
+            rag_service = SimpleRAGService()
+        
         sessions = rag_service.list_sessions()
         return {"sessions": sessions}
     except Exception as e:
@@ -207,6 +250,11 @@ async def delete_session(session_id: str):
     Delete a RAG session.
     """
     try:
+        # Initialize RAG service if not already done
+        if rag_service is None:
+            global rag_service
+            rag_service = SimpleRAGService()
+        
         success = rag_service.delete_session(session_id)
         if success:
             return {"message": f"Session {session_id} deleted successfully"}
