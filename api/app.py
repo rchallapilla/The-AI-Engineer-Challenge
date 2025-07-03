@@ -28,10 +28,7 @@ def get_openai_api_key():
         raise ValueError("OPENAI_API_KEY environment variable is not set")
     return api_key
 
-# Initialize simplified RAG service (without requiring API key at startup)
-rag_service = None
-
-# Initialize simplified RAG service (without requiring API key at startup)
+# Initialize simplified RAG service (lazy initialization)
 rag_service = None
 
 # Configure CORS (Cross-Origin Resource Sharing) middleware
@@ -114,18 +111,8 @@ async def upload_pdf(file: UploadFile = File(...)):
             temp_file_path = temp_file.name
         
         # Initialize RAG service if not already done
+        global rag_service
         if rag_service is None:
-            global rag_service
-            rag_service = SimpleRAGService()
-        
-        # Initialize RAG service if not already done
-        if rag_service is None:
-            global rag_service
-            rag_service = SimpleRAGService()
-        
-        # Initialize RAG service if not already done
-        if rag_service is None:
-            global rag_service
             rag_service = SimpleRAGService()
         
         # Create a new session
@@ -160,23 +147,8 @@ async def rag_chat(request: RAGChatRequest):
     """
     try:
         # Initialize RAG service if not already done
+        global rag_service
         if rag_service is None:
-            global rag_service
-            rag_service = SimpleRAGService()
-        
-        # Initialize RAG service if not already done
-        if rag_service is None:
-            global rag_service
-            rag_service = SimpleRAGService()
-        
-        # Initialize RAG service if not already done
-        if rag_service is None:
-            global rag_service
-            rag_service = SimpleRAGService()
-        
-        # Initialize RAG service if not already done
-        if rag_service is None:
-            global rag_service
             rag_service = SimpleRAGService()
         
         # Get relevant context from the PDF
@@ -235,8 +207,8 @@ async def list_sessions():
     """
     try:
         # Initialize RAG service if not already done
+        global rag_service
         if rag_service is None:
-            global rag_service
             rag_service = SimpleRAGService()
         
         sessions = rag_service.list_sessions()
@@ -251,8 +223,8 @@ async def delete_session(session_id: str):
     """
     try:
         # Initialize RAG service if not already done
+        global rag_service
         if rag_service is None:
-            global rag_service
             rag_service = SimpleRAGService()
         
         success = rag_service.delete_session(session_id)
