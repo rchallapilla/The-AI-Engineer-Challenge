@@ -22,9 +22,11 @@ from simple_rag_service import SimpleRAGService
 app = FastAPI(title="OpenAI Chat API with RAG")
 
 # Get OpenAI API key from environment variable
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-if not OPENAI_API_KEY:
-    raise ValueError("OPENAI_API_KEY environment variable is not set")
+def get_openai_api_key():
+    api_key = os.getenv("OPENAI_API_KEY")
+    if not api_key:
+        raise ValueError("OPENAI_API_KEY environment variable is not set")
+    return api_key
 
 # Initialize simplified RAG service
 rag_service = SimpleRAGService()
@@ -60,7 +62,7 @@ class RAGChatRequest(BaseModel):
 async def chat(request: ChatRequest):
     try:
         # Initialize OpenAI client with the environment variable API key
-        client = OpenAI(api_key=OPENAI_API_KEY)
+        client = OpenAI(api_key=get_openai_api_key())
         
         # Create an async generator function for streaming responses
         async def generate():
@@ -156,7 +158,7 @@ Please answer the user's question based on the document context above. If the an
 Keep your answers concise and relevant to the document content."""
 
         # Initialize OpenAI client
-        client = OpenAI(api_key=OPENAI_API_KEY)
+        client = OpenAI(api_key=get_openai_api_key())
         
         # Create an async generator function for streaming responses
         async def generate():
@@ -218,7 +220,12 @@ async def delete_session(session_id: str):
 # Define a health check endpoint to verify API status
 @app.get("/api/health")
 async def health_check():
-    return {"status": "ok"}
+    try:
+        # Test if we can get the API key
+        api_key = get_openai_api_key()
+        return {"status": "ok", "api_key_set": True}
+    except Exception as e:
+        return {"status": "error", "error": str(e), "api_key_set": False}
 
 # Entry point for running the application directly
 if __name__ == "__main__":
