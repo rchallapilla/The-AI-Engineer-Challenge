@@ -15,8 +15,8 @@ from dotenv import load_dotenv
 # Load environment variables from .env file
 load_dotenv()
 
-# Import our RAG service
-from rag_service import RAGService
+# Import our simplified RAG service
+from simple_rag_service import SimpleRAGService
 
 # Initialize FastAPI application with a title
 app = FastAPI(title="OpenAI Chat API with RAG")
@@ -26,8 +26,8 @@ OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 if not OPENAI_API_KEY:
     raise ValueError("OPENAI_API_KEY environment variable is not set")
 
-# Initialize RAG service
-rag_service = RAGService()
+# Initialize simplified RAG service
+rag_service = SimpleRAGService()
 
 # Configure CORS (Cross-Origin Resource Sharing) middleware
 # This allows the API to be accessed from different domains/origins
