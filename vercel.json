@@ -1,14 +1,28 @@
 {
     "version": 2,
     "functions": {
-      "api/app.py": {
+      "api/chat.py": {
+        "maxDuration": 60
+      },
+      "api/health.py": {
+        "maxDuration": 30
+      },
+      "api/rag_upload.py": {
         "maxDuration": 60
       }
     },
     "rewrites": [
       { 
-        "source": "/api/(.*)", 
-        "destination": "/api/app.py"
+        "source": "/api/chat", 
+        "destination": "/api/chat.py"
+      },
+      { 
+        "source": "/api/health", 
+        "destination": "/api/health.py"
+      },
+      { 
+        "source": "/api/rag/upload", 
+        "destination": "/api/rag_upload.py"
       }
     ],
     "headers": [

@@ -49,13 +49,28 @@ export default function Home() {
     }
 
     setUploading(true);
-    const formData = new FormData();
-    formData.append('file', file);
-
+    
     try {
+      // Convert file to base64
+      const reader = new FileReader();
+      const filePromise = new Promise<string>((resolve, reject) => {
+        reader.onload = () => resolve(reader.result as string);
+        reader.onerror = reject;
+      });
+      reader.readAsDataURL(file);
+      
+      const base64Data = await filePromise;
+      const base64Content = base64Data.split(',')[1]; // Remove data URL prefix
+      
       const response = await fetch('/api/rag/upload', {
         method: 'POST',
-        body: formData,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          file: base64Content,
+          filename: file.name
+        }),
       });
 
       if (!response.ok) {
@@ -141,28 +156,18 @@ export default function Home() {
         throw new Error('Failed to get response from the server');
       }
 
-      // Handle streaming response
-      const reader = response.body?.getReader();
-      if (!reader) throw new Error('No response body');
-
-      let accumulatedResponse = '';
-      setMessages(prev => [...prev, { role: 'assistant', content: '' }]);
-
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-
-        // Convert the Uint8Array to text
-        const text = new TextDecoder().decode(value);
-        accumulatedResponse += text;
-
-        // Update the last message with the accumulated response
-        setMessages(prev => {
-          const newMessages = [...prev];
-          newMessages[newMessages.length - 1].content = accumulatedResponse;
-          return newMessages;
-        });
+      // Handle JSON response
+      const responseData = await response.json();
+      
+      if (responseData.error) {
+        throw new Error(responseData.error);
       }
+      
+      // Add assistant message
+      setMessages(prev => [...prev, { 
+        role: 'assistant', 
+        content: responseData.content || responseData.message || 'No response content'
+      }]);
     } catch (error) {
       console.error('Error:', error);
       setMessages(prev => [...prev, { 
