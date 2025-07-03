@@ -4,7 +4,10 @@
       { "src": "frontend/package.json", "use": "@vercel/next" },
       { 
         "src": "api/app.py",
-        "use": "@vercel/python"
+        "use": "@vercel/python",
+        "config": {
+          "maxDuration": 60
+        }
       }
     ],
     "rewrites": [
@@ -27,10 +30,5 @@
           { "key": "Access-Control-Allow-Credentials", "value": "true" }
         ]
       }
-    ],
-    "functions": {
-      "api/app.py": {
-        "maxDuration": 60
-      }
-    }
+    ]
 } 
