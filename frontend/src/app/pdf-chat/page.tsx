@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useState, useRef } from 'react';
 
 interface Message {
@@ -256,12 +257,12 @@ export default function PDFChat() {
 
         {/* Navigation */}
         <div className="mt-8 text-center">
-          <a
+          <Link
             href="/"
             className="text-purple-300 hover:text-purple-100 transition-colors underline"
           >
             ← Back to Asimov-Vedanta Chat
-          </a>
+          </Link>
         </div>
       </div>
     </div>
