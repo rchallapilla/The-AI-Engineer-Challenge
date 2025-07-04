@@ -37,7 +37,7 @@ export default function PDFChat() {
     formData.append('file', file);
 
     try {
-      const response = await fetch('http://localhost:8000/api/upload_pdf', {
+      const response = await fetch('/api/upload_pdf', {
         method: 'POST',
         body: formData,
       });
@@ -90,7 +90,7 @@ export default function PDFChat() {
     setIsLoading(true);
 
     try {
-      const response = await fetch('http://localhost:8000/api/pdf_chat', {
+      const response = await fetch('/api/pdf_chat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
