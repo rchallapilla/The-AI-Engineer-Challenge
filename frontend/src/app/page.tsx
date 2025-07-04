@@ -87,6 +87,14 @@ export default function Home() {
             <p>Second Law: A robot must obey orders given it by human beings except where such orders would conflict with the First Law.</p>
             <p>Third Law: A robot must protect its own existence as long as such protection does not conflict with the First or Second Law.</p>
           </div>
+          <div className="mt-6">
+            <a
+              href="/pdf-chat"
+              className="inline-block px-6 py-3 bg-gradient-to-r from-purple-600 to-amber-600 rounded-lg font-semibold hover:from-purple-700 hover:to-amber-700 transition-all border border-purple-500/30 text-white"
+            >
+              📄 PDF RAG Chat
+            </a>
+          </div>
         </header>
 
         <div className="bg-black/40 backdrop-blur-lg rounded-lg p-6 mb-6 h-[60vh] overflow-y-auto border border-purple-500/30">
