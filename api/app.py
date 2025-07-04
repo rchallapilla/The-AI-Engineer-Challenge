@@ -41,11 +41,9 @@ app.add_middleware(
     expose_headers=["*"]
 )
 
-# Directory to store uploaded PDFs and vector indices
-PDF_UPLOAD_DIR = os.path.join(os.path.dirname(__file__), 'pdf_uploads')
-VECTOR_INDEX_DIR = os.path.join(os.path.dirname(__file__), 'vector_indices')
-os.makedirs(PDF_UPLOAD_DIR, exist_ok=True)
-os.makedirs(VECTOR_INDEX_DIR, exist_ok=True)
+# For Vercel serverless: use ephemeral in-memory processing only
+# No persistent file storage due to read-only filesystem
+PDF_UPLOAD_DIR = "/tmp"  # Use /tmp for temporary file storage
 
 # Global variable to store vector databases for uploaded PDFs
 pdf_vector_dbs = {}
@@ -117,9 +115,15 @@ async def upload_pdf(file: UploadFile = File(...)):
         # Index the PDF using aimakerspace
         await index_pdf(file_path, file.filename)
         
+        # Clean up temporary file (ephemeral processing)
+        try:
+            os.remove(file_path)
+        except:
+            pass  # Ignore cleanup errors
+        
         return {
             "filename": file.filename, 
-            "message": "PDF uploaded and indexed successfully.",
+            "message": "PDF uploaded and indexed successfully (ephemeral).",
             "status": "indexed"
         }
     except Exception as e:
@@ -178,11 +182,10 @@ async def index_pdf(file_path: str, filename: str):
                     print(f"Skipping batch due to error: {str(batch_error)}")
                     continue
         
-        # Store the vector database for this PDF
+        # Store the vector database for this PDF (ephemeral, in-memory only)
         pdf_vector_dbs[filename] = {
             'vector_db': vector_db,
-            'chunks': chunks,
-            'file_path': file_path
+            'chunks': chunks
         }
         
         print(f"Successfully indexed PDF: {filename} with {len(chunks)} chunks")
