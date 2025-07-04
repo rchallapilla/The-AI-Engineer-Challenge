@@ -33,6 +33,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:3000",
+        "https://asimov-vedanta.vercel.app",
         "https://asimov-vedanta-12lxb8yaj-raghus-projects-920446ba.vercel.app"
     ],
     allow_credentials=True,
@@ -89,7 +90,7 @@ async def chat(request: ChatRequest):
 
         # Return a streaming response to the client
         return StreamingResponse(generate(), media_type="text/plain", headers={
-            "Access-Control-Allow-Origin": "https://asimov-vedanta-12lxb8yaj-raghus-projects-920446ba.vercel.app",
+            "Access-Control-Allow-Origin": "*",
             "Access-Control-Allow-Credentials": "true",
             "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
             "Access-Control-Allow-Headers": "Content-Type, Authorization",

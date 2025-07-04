@@ -23,9 +23,6 @@ export default function PDFChat() {
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Get API URL from environment variable or use relative path
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || '';
-
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
@@ -40,7 +37,7 @@ export default function PDFChat() {
     formData.append('file', file);
 
     try {
-      const response = await fetch(`${apiUrl}/api/upload_pdf`, {
+      const response = await fetch('/api/upload_pdf', {
         method: 'POST',
         body: formData,
       });
@@ -93,7 +90,7 @@ export default function PDFChat() {
     setIsLoading(true);
 
     try {
-      const response = await fetch(`${apiUrl}/api/pdf_chat`, {
+      const response = await fetch('/api/pdf_chat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

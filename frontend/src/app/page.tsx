@@ -12,9 +12,6 @@ export default function Home() {
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  // Get API URL from environment variable or use relative path
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || '';
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim()) return;
@@ -25,7 +22,7 @@ export default function Home() {
     setIsLoading(true);
 
     try {
-      const response = await fetch(`${apiUrl}/api/chat`, {
+      const response = await fetch('/api/chat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
